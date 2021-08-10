@@ -1,5 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
 module.exports = {
 	mode: 'development', //  기본적으로 product모드 , ==> 모든 변수축약 및 압축
 	entry: {
@@ -15,8 +17,9 @@ module.exports = {
 		rules: [
 			{
 				// 하나당 오브젝 하나 ,
-				test: /\.css$/,
-				use: ['style-loader', 'css-loader'] // css를 로드해서 style태그로 바꿔주는것 // 순서 중욧함!!!!! // 뒷쪽에 있는애가 먼저실행되므 주의해
+				test: /\.s(a|c)ss$/i,
+				//style loader지움
+				use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader', 'postcss-loader'] // css를 로드해서 style태그로 바꿔주는것 // 순서 중욧함!!!!! // 뒷쪽에 있는애가 먼저실행되므 주의해
 			}
 		]
 	},
@@ -26,14 +29,16 @@ module.exports = {
 			filename: './index.html',
 			inject: 'body',
 			chunks: ['index'] // 이름은 key 위에 있는거 , 이러면 index.js만 들어감
-		})
+		}),
 		// new HtmlWebpackPlugin({ //다른 파일엔 이렇게~~~
 		// 	template: './app/index.html',
 		// 	filename: './index.html',
 		// 	inject: 'body',
 		// 	chunks: ['index'] // 이름은 key 위에 있는거 , 이러면 index.js만 들어감
 		// })
-	]
+		new MiniCssExtractPlugin()
+	],
+	devtool: 'source-map'
 };
 
 //npx webpack --config webpack.config.prod.js
